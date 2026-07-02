@@ -1,0 +1,65 @@
+name: ETL Automation
+
+on:
+  schedule:
+    - cron: "0 1 * * *"  # jalan tiap hari jam 08:00 WIB
+  workflow_dispatch:     # bisa run manual
+
+jobs:
+  run-etl:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Run ETL
+        env:
+          GCP_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
+        run: |
+          python etl.py
+=======
+name: Data Pipeline Automation
+
+on:
+  schedule:
+    - cron: "0 1 * * *"  # jalan tiap hari jam 08:00 WIB
+  workflow_dispatch:     # bisa run manual
+
+jobs:
+  run-pipeline:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Run ETL
+        env:
+          GCP_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
+        run: |
+          python etl.py
+
+      - name: Run Forecast
+        env:
+          GCP_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
+        run: |
+          python forecast.py
